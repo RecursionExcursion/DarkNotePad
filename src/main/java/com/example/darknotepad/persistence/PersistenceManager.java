@@ -33,6 +33,4 @@ public class PersistenceManager {
     public void saveObject(SerSettings t) {
         memorySerializationManager.save(t);
     }
-
-
 }

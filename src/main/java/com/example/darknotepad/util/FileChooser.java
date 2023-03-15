@@ -13,7 +13,7 @@ import java.util.List;
 public class FileChooser {
 
     private static final javafx.stage.FileChooser fileChooser;
-    @SuppressWarnings("unchecked")
+
     private static final PersistenceManager persistenceManager = PersistenceManager.getInstance();
     private static final SerSettings settings = persistenceManager.getObject();
 
@@ -47,7 +47,6 @@ public class FileChooser {
         saveRecentFilePath(file);
         return strings;
     }
-
 
     public static void save(BorderPane pane, String text) {
 
