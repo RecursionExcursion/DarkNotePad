@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.darknotepad.controllers.MainController">
+    <top>
+        <MenuBar BorderPane.alignment="CENTER" fx:id="menuBar">
+            <menus>
+                <Menu mnemonicParsing="false" text="File">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="New"/>
+                        <MenuItem mnemonicParsing="false" text="New Window" onAction="#onNewWindowClick"/>
+                        <MenuItem mnemonicParsing="false" onAction="#openClick" text="Open..."/>
+                        <MenuItem mnemonicParsing="false" onAction="#saveClick" text="Save As..."/>
+                        <SeparatorMenuItem mnemonicParsing="false"/>
+                        <MenuItem mnemonicParsing="false" text="Page Setup"/>
+                        <MenuItem mnemonicParsing="false" text="Light/Dark" onAction="#colorSchemeClick"/>
+                        <SeparatorMenuItem mnemonicParsing="false"/>
+                        <MenuItem mnemonicParsing="false" text="Close"/>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Undo" onAction="#onUndoClick" fx:id="undoCmd"/>
+                        <MenuItem mnemonicParsing="false" text="Redo" onAction="#onRedoClick" fx:id="redoCmd"/>
+                        <SeparatorMenuItem mnemonicParsing="false"/>
+                        <MenuItem mnemonicParsing="false" text="Cut" onAction="#onCopyClick" fx:id="cutCmd"/>
+                        <MenuItem mnemonicParsing="false" text="Copy" onAction="#onCutClick" fx:id="copyCmd"/>
+                        <MenuItem mnemonicParsing="false" text="Paste" onAction="#onPasteClick" fx:id="pasteCmd"/>
+                        <MenuItem mnemonicParsing="false" text="Delete" onAction="#onDeleteClick" fx:id="deleteCmd"/>
+                        <SeparatorMenuItem mnemonicParsing="false"/>
+                        <MenuItem mnemonicParsing="false" text="Date/Time" onAction="#onDateTimeClick"/>
+
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Format">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Word Wrap" onAction="#onWordWrapClick"/>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="About"/>
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+    </top>
+    <center>
+        <TextArea fx:id="mainTextArea" onKeyTyped="#onKeyTyped"  prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER"/>
+    </center>
+</BorderPane>
