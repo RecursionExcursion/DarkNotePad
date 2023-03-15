@@ -19,14 +19,17 @@ public class PersistenceManager {
         return INSTANCE;
     }
 
-    public SerSettings getSettings(){
-        if(!memorySerializationManager.fileExists()){
+    public SerSettings getSettings() {
+        try {
+            return memorySerializationManager.load();
+        } catch (Exception e) {
+            //Overwrites Settings.ser with new version if corrupt
             memorySerializationManager.save(new SerSettings());
         }
-        return memorySerializationManager.load();
+        return getSettings();
     }
 
-    public void SaveSettings(SerSettings serSettings){
+    public void SaveSettings(SerSettings serSettings) {
         memorySerializationManager.save(serSettings);
     }
 }

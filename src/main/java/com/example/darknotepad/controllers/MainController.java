@@ -46,8 +46,10 @@ public class MainController implements Initializable {
 
     Clipboard clipboard = Clipboard.getSystemClipboard();
 
-    private boolean darkMode = false;
-    private boolean textWrap = false;
+    PersistenceManager persistenceManager = PersistenceManager.getInstance();
+
+    private boolean darkMode = persistenceManager.getSettings().isDarkMode();
+    private boolean textWrap = persistenceManager.getSettings().isTextWrap();
 
 
     @Override
@@ -132,7 +134,7 @@ public class MainController implements Initializable {
         ObservableList<String> stylesheets = mainPane.getScene().getStylesheets();
         stylesheets.clear();
 
-        SerSettings settings = PersistenceManager.getInstance().getSettings();
+        SerSettings settings = persistenceManager.getSettings();
 
 
         if (darkMode) {
@@ -157,6 +159,10 @@ public class MainController implements Initializable {
     public void onWordWrapClick() {
         mainTextArea.setWrapText(!textWrap);
         textWrap = !textWrap;
+
+        SerSettings settings = persistenceManager.getSettings();
+        settings.setTextWrap(textWrap);
+        persistenceManager.SaveSettings(settings);
     }
 
     public void onUndoClick() {

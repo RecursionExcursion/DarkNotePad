@@ -6,6 +6,8 @@ public class SerSettings implements Serializable {
 
     private boolean darkMode;
 
+    private boolean textWrap;
+
     private String recentFileDir;
 
 
@@ -23,5 +25,13 @@ public class SerSettings implements Serializable {
 
     public void setRecentFileDir(String recentFileDir) {
         this.recentFileDir = recentFileDir;
+    }
+
+    public boolean isTextWrap() {
+        return textWrap;
+    }
+
+    public void setTextWrap(boolean textWrap) {
+        this.textWrap = textWrap;
     }
 }
