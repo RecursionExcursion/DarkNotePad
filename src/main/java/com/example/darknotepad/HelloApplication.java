@@ -20,12 +20,12 @@ public class HelloApplication extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("main-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 640, 400);
 
-        SerSettings settings = PersistenceManager.getInstance().getSettings();
+        SerSettings settings =  PersistenceManager.getInstance().getObject();
 
         URL cssUrl;
-        if(!settings.isDarkMode()){
-             cssUrl = getClass().getResource("/css/light.css");
-        } else  {
+        if (!settings.isDarkMode()) {
+            cssUrl = getClass().getResource("/css/light.css");
+        } else {
             cssUrl = getClass().getResource("/css/dark.css");
         }
 

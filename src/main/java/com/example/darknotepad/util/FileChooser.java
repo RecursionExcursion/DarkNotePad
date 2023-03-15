@@ -13,8 +13,9 @@ import java.util.List;
 public class FileChooser {
 
     private static final javafx.stage.FileChooser fileChooser;
+    @SuppressWarnings("unchecked")
     private static final PersistenceManager persistenceManager = PersistenceManager.getInstance();
-    private static final SerSettings settings = persistenceManager.getSettings();
+    private static final SerSettings settings = persistenceManager.getObject();
 
     static {
         fileChooser = new javafx.stage.FileChooser();
@@ -23,14 +24,14 @@ public class FileChooser {
         );
     }
 
-    public static List<String> open(BorderPane pane ) {
+    public static List<String> open(BorderPane pane) {
 
         setRecentFilePath();
 
         fileChooser.setTitle("Open file");
         File file = fileChooser.showOpenDialog(pane.getScene().getWindow());
 
-        if (file == null){
+        if (file == null) {
             return null;
         }
 
@@ -39,7 +40,7 @@ public class FileChooser {
         List<String> strings;
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-             strings = br.lines().toList();
+            strings = br.lines().toList();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -48,12 +49,10 @@ public class FileChooser {
     }
 
 
-
     public static void save(BorderPane pane, String text) {
 
         fileChooser.setTitle("Save file");
 
-        SerSettings settings = persistenceManager.getSettings();
         setRecentFilePath();
 
         File file = fileChooser.showSaveDialog(pane.getScene().getWindow());
@@ -71,7 +70,7 @@ public class FileChooser {
     private static void setRecentFilePath() {
         String recentFileDir = settings.getRecentFileDir();
 
-        if(recentFileDir != null){
+        if (recentFileDir != null) {
             File recentDir = new File(recentFileDir);
             fileChooser.setInitialDirectory(recentDir);
         }
@@ -79,6 +78,6 @@ public class FileChooser {
 
     private static void saveRecentFilePath(File file) {
         settings.setRecentFileDir(file.getParent());
-        PersistenceManager.getInstance().SaveSettings(settings);
+        persistenceManager.saveObject(settings);
     }
 }

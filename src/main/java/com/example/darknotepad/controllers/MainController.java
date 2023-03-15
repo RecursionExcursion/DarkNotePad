@@ -28,9 +28,7 @@ import java.util.ResourceBundle;
 public class MainController implements Initializable {
 
     public BorderPane mainPane;
-
     public TextArea mainTextArea;
-
     public MenuBar menuBar;
 
     public MenuItem redoCmd;
@@ -47,9 +45,10 @@ public class MainController implements Initializable {
     Clipboard clipboard = Clipboard.getSystemClipboard();
 
     PersistenceManager persistenceManager = PersistenceManager.getInstance();
+    SerSettings settings = persistenceManager.getObject();
 
-    private boolean darkMode = persistenceManager.getSettings().isDarkMode();
-    private boolean textWrap = persistenceManager.getSettings().isTextWrap();
+    private boolean darkMode = settings.isDarkMode();
+    private boolean textWrap = settings.isTextWrap();
 
 
     @Override
@@ -64,7 +63,6 @@ public class MainController implements Initializable {
         copyCmd.setAccelerator(new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN));
         pasteCmd.setAccelerator(new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN));
         deleteCmd.setAccelerator(new KeyCodeCombination(KeyCode.DELETE));
-
 
         //Filter key combos
         mainTextArea.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
@@ -134,8 +132,6 @@ public class MainController implements Initializable {
         ObservableList<String> stylesheets = mainPane.getScene().getStylesheets();
         stylesheets.clear();
 
-        SerSettings settings = persistenceManager.getSettings();
-
 
         if (darkMode) {
             assert lightCSSScheme != null;
@@ -147,7 +143,7 @@ public class MainController implements Initializable {
             settings.setDarkMode(true);
         }
 
-        PersistenceManager.getInstance().SaveSettings(settings);
+        persistenceManager.saveObject(settings);
         darkMode = !darkMode;
     }
 
@@ -160,9 +156,8 @@ public class MainController implements Initializable {
         mainTextArea.setWrapText(!textWrap);
         textWrap = !textWrap;
 
-        SerSettings settings = persistenceManager.getSettings();
         settings.setTextWrap(textWrap);
-        persistenceManager.SaveSettings(settings);
+        persistenceManager.saveObject(settings);
     }
 
     public void onUndoClick() {
@@ -220,7 +215,7 @@ public class MainController implements Initializable {
 
     public void onNewWindowClick() {
 
-        try{
+        try {
             FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("main-view.fxml"));
             Stage stage = new Stage();
             stage.setTitle("DarkPad!");
@@ -240,7 +235,5 @@ public class MainController implements Initializable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
     }
 }
