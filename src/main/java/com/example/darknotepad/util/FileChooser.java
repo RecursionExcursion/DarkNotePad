@@ -1,8 +1,8 @@
 package com.example.darknotepad.util;
 
 import com.example.darknotepad.HelloApplication;
-import com.example.darknotepad.persistence.PersistenceManager;
-import com.example.darknotepad.persistence.SerSettings;
+import com.example.darknotepad.persistence.SerializationManager;
+import com.example.darknotepad.persistence.SerializableSettings;
 import javafx.scene.layout.BorderPane;
 
 import java.io.*;
@@ -14,8 +14,8 @@ public class FileChooser {
 
     private static final javafx.stage.FileChooser fileChooser;
 
-    private static final PersistenceManager persistenceManager = PersistenceManager.getInstance();
-    private static final SerSettings settings = persistenceManager.getObject();
+    private static final SerializationManager SERIALIZATION_MANAGER = SerializationManager.INSTANCE;
+    private static final SerializableSettings settings = SERIALIZATION_MANAGER.getSettings();
 
     static {
         fileChooser = new javafx.stage.FileChooser();
@@ -77,6 +77,5 @@ public class FileChooser {
 
     private static void saveRecentFilePath(File file) {
         settings.setRecentFileDir(file.getParent());
-        persistenceManager.saveObject(settings);
     }
 }

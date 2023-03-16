@@ -2,7 +2,7 @@ package com.example.darknotepad.persistence;
 
 import java.io.Serializable;
 
-public class SerSettings implements Serializable {
+public class SerializableSettings implements Serializable {
 
     private boolean darkMode;
 

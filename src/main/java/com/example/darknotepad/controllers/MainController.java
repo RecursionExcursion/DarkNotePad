@@ -1,24 +1,17 @@
 package com.example.darknotepad.controllers;
 
-import com.example.darknotepad.HelloApplication;
-import com.example.darknotepad.persistence.PersistenceManager;
-import com.example.darknotepad.persistence.SerSettings;
-import com.example.darknotepad.util.FileChooser;
-import com.example.darknotepad.util.RedoHandler;
-import com.example.darknotepad.util.UndoHandler;
+import com.example.darknotepad.persistence.SerializationManager;
+import com.example.darknotepad.persistence.SerializableSettings;
+import com.example.darknotepad.util.*;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.IndexRange;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -44,12 +37,10 @@ public class MainController implements Initializable {
 
     Clipboard clipboard = Clipboard.getSystemClipboard();
 
-    PersistenceManager persistenceManager = PersistenceManager.getInstance();
-    SerSettings settings = persistenceManager.getObject();
+    SerializationManager serializationManager = SerializationManager.INSTANCE;
+    SerializableSettings settings = serializationManager.getSettings();
 
-    private boolean darkMode = settings.isDarkMode();
     private boolean textWrap = settings.isTextWrap();
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -126,25 +117,10 @@ public class MainController implements Initializable {
     }
 
     public void colorSchemeClick() {
-        URL lightCSSScheme = getClass().getResource("/css/light.css");
-        URL darkCSSScheme = getClass().getResource("/css/dark.css");
-
         ObservableList<String> stylesheets = mainPane.getScene().getStylesheets();
         stylesheets.clear();
-
-
-        if (darkMode) {
-            assert lightCSSScheme != null;
-            stylesheets.add(lightCSSScheme.toExternalForm());
-            settings.setDarkMode(false);
-        } else {
-            assert darkCSSScheme != null;
-            stylesheets.add(darkCSSScheme.toExternalForm());
-            settings.setDarkMode(true);
-        }
-
-        persistenceManager.saveObject(settings);
-        darkMode = !darkMode;
+        stylesheets.add(CssManager.INSTANCE.getOppositeCssUrl());
+        settings.setDarkMode(!settings.isDarkMode());
     }
 
     public void onDateTimeClick() {
@@ -153,11 +129,8 @@ public class MainController implements Initializable {
     }
 
     public void onWordWrapClick() {
-        mainTextArea.setWrapText(!textWrap);
-        textWrap = !textWrap;
-
-        settings.setTextWrap(textWrap);
-        persistenceManager.saveObject(settings);
+        settings.setTextWrap(!settings.isTextWrap());
+        mainTextArea.setWrapText(settings.isTextWrap());
     }
 
     public void onUndoClick() {
@@ -214,26 +187,6 @@ public class MainController implements Initializable {
     }
 
     public void onNewWindowClick() {
-
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("main-view.fxml"));
-            Stage stage = new Stage();
-            stage.setTitle("DarkPad!");
-            Scene scene = new Scene(fxmlLoader.load(), 640, 400);
-            URL cssUrl = getClass().getResource("/css/light.css");
-
-            if (cssUrl == null) {
-                System.out.println("Resource not found. Aborting application.");
-                System.exit(-1);
-            }
-
-            scene.getStylesheets().add(cssUrl.toExternalForm());
-
-            stage.setScene(scene);
-            stage.show();
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        SceneLoader.createNewWindow("main-view.fxml", 640, 400);
     }
 }
