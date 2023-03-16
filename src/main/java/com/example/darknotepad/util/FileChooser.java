@@ -1,8 +1,7 @@
 package com.example.darknotepad.util;
 
-import com.example.darknotepad.HelloApplication;
-import com.example.darknotepad.persistence.SerializationManager;
 import com.example.darknotepad.persistence.SerializableSettings;
+import com.example.darknotepad.persistence.SerializationManager;
 import javafx.scene.layout.BorderPane;
 
 import java.io.*;
@@ -34,9 +33,6 @@ public class FileChooser {
         if (file == null) {
             return null;
         }
-
-        HelloApplication.setStageTitle(file.getName());
-
         List<String> strings;
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {

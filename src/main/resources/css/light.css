@@ -4,6 +4,8 @@
     -fx-my-menu-color-highlighted: #7e7e7e;      /* Change according to your needs */
     -fx-my-menu-font-color: #000000;             /* Change according to your needs */
     -fx-my-menu-font-color-highlighted: #FFFFFF; /* Change according to your needs */
+    -fx-textarea-background: #FFFFFF; /* Change according to your needs */
+    -fx-textarea-textfill:  #000000;   /* Change according to your needs */
 }
 
 /* MENU BAR + Top-level MENU BUTTONS */
@@ -75,8 +77,22 @@
 
 /* Text Area */
 .text-area {
-    -fx-control-inner-background: white;
-    -fx-text-fill: black;
+    -fx-control-inner-background:-fx-textarea-background;
+    -fx-text-fill: -fx-textarea-textfill;
     -fx-focus-color: -fx-control-inner-background ;
     -fx-faint-focus-color: -fx-control-inner-background ;
+}
+
+HBox {
+    -fx-background-color: -fx-my-menu-color;
+}
+
+.button {
+    -fx-background-color: -fx-my-menu-color;
+    -fx-text-fill: -fx-textarea-textfill;
+}
+
+.button:hover {
+    -fx-background-color: -fx-textarea-textfill;
+    -fx-text-fill: -fx-my-menu-color;
 }

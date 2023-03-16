@@ -6,6 +6,7 @@ module com.example.darknotepad {
     opens com.example.darknotepad to javafx.fxml;
     exports com.example.darknotepad;
     exports com.example.darknotepad.controllers;
+    exports com.example.darknotepad.dto;
     opens com.example.darknotepad.controllers to javafx.fxml;
     exports com.example.darknotepad.persistence;
     opens com.example.darknotepad.persistence to javafx.fxml;

@@ -24,6 +24,10 @@ public class HelloApplication extends Application {
         pStage.setTitle(title);
     }
 
+    public static String getStageTitle() {
+        return pStage.getTitle();
+    }
+
     @Override
     public void stop() {
         SerializationManager.INSTANCE.save();

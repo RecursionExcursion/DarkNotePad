@@ -1,25 +1,26 @@
 package com.example.darknotepad.controllers;
 
-import com.example.darknotepad.persistence.SerializationManager;
 import com.example.darknotepad.persistence.SerializableSettings;
+import com.example.darknotepad.persistence.SerializationManager;
 import com.example.darknotepad.util.*;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.IndexRange;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.WindowEvent;
 
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
 
+    @FXML
     public BorderPane mainPane;
     public TextArea mainTextArea;
     public MenuBar menuBar;
@@ -31,31 +32,69 @@ public class MainController implements Initializable {
     public MenuItem pasteCmd;
     public MenuItem deleteCmd;
 
-
     private final UndoHandler undoHandler = new UndoHandler();
     private final RedoHandler redoHandler = new RedoHandler();
+    private final Clipboard clipboard = Clipboard.getSystemClipboard();
+    private final SerializationManager serializationManager = SerializationManager.INSTANCE;
+    private final SerializableSettings settings = serializationManager.getSettings();
 
-    Clipboard clipboard = Clipboard.getSystemClipboard();
+    private String firstLoad;
+    private String currentLoad;
 
-    SerializationManager serializationManager = SerializationManager.INSTANCE;
-    SerializableSettings settings = serializationManager.getSettings();
-
-    private boolean textWrap = settings.isTextWrap();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         //Set Undo start point
         undoHandler.storeState(mainTextArea.getText());
+        firstLoad = mainTextArea.getText();
 
-        //Set Accelerators
+        setAccelerators();
+        setListeners();
+        setKeysToBeConsumed();
+    }
+
+    private void setListeners() {
+        mainTextArea.textProperty().addListener((observableValue, s, t1) -> {
+            currentLoad = mainTextArea.getText();
+        });
+
+        //Scene and Window initialized listener
+        mainPane.sceneProperty().addListener((observableValue, oldScene, newScene) -> {
+            if (oldScene == null && newScene != null) {
+                mainPane.getScene().windowProperty().addListener((observableValue1, oldWindow, newWindow) -> {
+                    if (oldWindow == null && newWindow != null) {
+                        addWindowCloseEvent();
+                    }
+                });
+            }
+        });
+    }
+
+    private void addWindowCloseEvent() {
+        mainTextArea.getScene().getWindow().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, windowEvent -> {
+            if (!firstLoad.equals(currentLoad)) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Would you like to save your document?");
+                alert.setHeaderText(null);
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.isPresent() && result.get() == ButtonType.OK) {
+                    FileChooser.save(mainPane, currentLoad);
+                }
+            }
+        });
+    }
+
+    private void setAccelerators() {
         undoCmd.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN));
         redoCmd.setAccelerator(new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN));
         cutCmd.setAccelerator(new KeyCodeCombination(KeyCode.X, KeyCombination.CONTROL_DOWN));
         copyCmd.setAccelerator(new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN));
         pasteCmd.setAccelerator(new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN));
         deleteCmd.setAccelerator(new KeyCodeCombination(KeyCode.DELETE));
+    }
 
-        //Filter key combos
+    private void setKeysToBeConsumed() {
         mainTextArea.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
             //Disable windows default Undo
             if (e.getCode() == KeyCode.Z && e.isControlDown()) {
@@ -110,6 +149,7 @@ public class MainController implements Initializable {
             text.forEach(line -> sb.append(line).append("\n"));
             mainTextArea.setText(sb.toString());
         }
+        firstLoad = mainTextArea.getText();
     }
 
     public void saveClick() {
@@ -124,8 +164,7 @@ public class MainController implements Initializable {
     }
 
     public void onDateTimeClick() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a MM/dd/yyyy");
-        mainTextArea.appendText(formatter.format(LocalDateTime.now()));
+        mainTextArea.appendText(DateTimeFormatter.ofPattern("hh:mm a MM/dd/yyyy").format(LocalDateTime.now()));
     }
 
     public void onWordWrapClick() {
@@ -134,7 +173,6 @@ public class MainController implements Initializable {
     }
 
     public void onUndoClick() {
-
         String lastState = undoHandler.getLastState();
         String currentText = mainTextArea.getText();
         if (lastState.equals(currentText)) {
