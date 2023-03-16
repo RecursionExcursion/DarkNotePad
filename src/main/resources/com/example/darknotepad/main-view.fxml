@@ -27,7 +27,7 @@
                               <MenuItem mnemonicParsing="false" text="Page Setup" />
                               <MenuItem mnemonicParsing="false" onAction="#colorSchemeClick" text="Light/Dark" />
                               <SeparatorMenuItem mnemonicParsing="false" />
-                              <MenuItem mnemonicParsing="false" text="Close" />
+                              <MenuItem mnemonicParsing="false" text="Close" onAction="#onCloseClick"/>
                           </items>
                       </Menu>
                       <Menu mnemonicParsing="false" text="Edit">

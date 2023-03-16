@@ -9,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import java.net.URL;
@@ -226,5 +227,10 @@ public class MainController implements Initializable {
 
     public void onNewWindowClick() {
         SceneLoader.createNewWindow("main-view.fxml", 640, 400);
+    }
+
+    public void onCloseClick() {
+        Stage stage = (Stage) mainPane.getScene().getWindow();
+        stage.close();
     }
 }
