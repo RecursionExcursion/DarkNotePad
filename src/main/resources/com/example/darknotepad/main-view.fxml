@@ -17,20 +17,19 @@
          <children>
               <MenuBar fx:id="menuBar">
                   <menus>
-                      <Menu mnemonicParsing="false" text="File">
+                      <Menu mnemonicParsing="false" text="_File">
                           <items>
                               <MenuItem mnemonicParsing="false" text="New" />
                               <MenuItem mnemonicParsing="false" onAction="#onNewWindowClick" text="New Window" />
                               <MenuItem mnemonicParsing="false" onAction="#openClick" text="Open..." />
                               <MenuItem mnemonicParsing="false" onAction="#saveClick" text="Save As..." />
                               <SeparatorMenuItem mnemonicParsing="false" />
-                              <MenuItem mnemonicParsing="false" text="Page Setup" />
-                              <MenuItem mnemonicParsing="false" onAction="#colorSchemeClick" text="Light/Dark" />
+                              <MenuItem mnemonicParsing="false" onAction="#colorSchemeClick" text="Color Mode" />
                               <SeparatorMenuItem mnemonicParsing="false" />
                               <MenuItem mnemonicParsing="false" text="Close" onAction="#onCloseClick"/>
                           </items>
                       </Menu>
-                      <Menu mnemonicParsing="false" text="Edit">
+                      <Menu mnemonicParsing="false" text="_Edit">
                           <items>
                               <MenuItem fx:id="undoCmd" mnemonicParsing="false" onAction="#onUndoClick" text="Undo" />
                               <MenuItem fx:id="redoCmd" mnemonicParsing="false" onAction="#onRedoClick" text="Redo" />
@@ -44,16 +43,16 @@
       
                                 </items>
                       </Menu>
-                      <Menu mnemonicParsing="false" text="Format">
+                      <Menu mnemonicParsing="false" text="F_ormat">
                           <items>
                               <MenuItem mnemonicParsing="false" onAction="#onWordWrapClick" text="Word Wrap" />
                           </items>
                       </Menu>
-                      <Menu mnemonicParsing="false" text="Help">
-                          <items>
-                              <MenuItem mnemonicParsing="false" text="About" />
-                          </items>
-                      </Menu>
+<!--                      <Menu mnemonicParsing="false" text="Help">-->
+<!--                          <items>-->
+<!--                              <MenuItem mnemonicParsing="false" text="About" />-->
+<!--                          </items>-->
+<!--                      </Menu>-->
                   </menus>
               </MenuBar>
             <HBox alignment="CENTER_RIGHT">
