@@ -15,7 +15,7 @@ public class RedoHandler {
     }
 
     public boolean isEmpty() {
-        return stringStack.isEmpty();
+        return !stringStack.isEmpty();
     }
 
     public void clear() {

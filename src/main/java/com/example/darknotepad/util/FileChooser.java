@@ -3,6 +3,7 @@ package com.example.darknotepad.util;
 import com.example.darknotepad.persistence.SerializableSettings;
 import com.example.darknotepad.persistence.SerializationManager;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -23,7 +24,7 @@ public class FileChooser {
         );
     }
 
-    public static List<String> open(BorderPane pane) {
+    public static List<String> open(BorderPane pane, Stage stage) {
 
         setRecentFilePath();
 
@@ -33,8 +34,10 @@ public class FileChooser {
         if (file == null) {
             return null;
         }
+
         List<String> strings;
 
+        stage.setTitle(file.getName());
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             strings = br.lines().toList();
         } catch (IOException e) {
@@ -44,7 +47,7 @@ public class FileChooser {
         return strings;
     }
 
-    public static void save(BorderPane pane, String text) {
+    public static void save(BorderPane pane, String text, Stage stage) {
 
         fileChooser.setTitle("Save file");
 
@@ -59,8 +62,10 @@ public class FileChooser {
                 throw new RuntimeException(e);
             }
             saveRecentFilePath(file);
+            stage.setTitle(file.getName());
         }
     }
+
 
     private static void setRecentFilePath() {
         String recentFileDir = settings.getRecentFileDir();

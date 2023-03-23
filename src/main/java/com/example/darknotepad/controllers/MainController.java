@@ -18,6 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.function.Supplier;
 
 public class MainController implements Initializable {
 
@@ -42,6 +43,7 @@ public class MainController implements Initializable {
     private String firstLoad;
     private String currentLoad;
 
+    private final Supplier<Stage> currentStage = () -> (Stage) mainPane.getScene().getWindow();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -53,12 +55,11 @@ public class MainController implements Initializable {
         setAccelerators();
         setListeners();
         setKeysToBeConsumed();
+
     }
 
     private void setListeners() {
-        mainTextArea.textProperty().addListener((observableValue, s, t1) -> {
-            currentLoad = mainTextArea.getText();
-        });
+        mainTextArea.textProperty().addListener((observableValue, s, t1) -> currentLoad = mainTextArea.getText());
 
         //Scene and Window initialized listener
         mainPane.sceneProperty().addListener((observableValue, oldScene, newScene) -> {
@@ -80,7 +81,7 @@ public class MainController implements Initializable {
                 alert.setHeaderText(null);
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.isPresent() && result.get() == ButtonType.OK) {
-                    FileChooser.save(mainPane, currentLoad);
+                    FileChooser.save(mainPane, currentLoad, currentStage.get());
                 }
             }
         });
@@ -137,14 +138,14 @@ public class MainController implements Initializable {
         boolean isValidChar = aChar >= 32 && aChar <= 255;
         if (isValidChar) {
             undoHandler.storeState(mainTextArea.getText());
-            if (!redoHandler.isEmpty()) {
+            if (redoHandler.isEmpty()) {
                 redoHandler.clear();
             }
         }
     }
 
     public void openClick() {
-        List<String> text = FileChooser.open(mainPane);
+        List<String> text = FileChooser.open(mainPane, currentStage.get());
         if (text != null) {
             StringBuilder sb = new StringBuilder();
             text.forEach(line -> sb.append(line).append("\n"));
@@ -154,7 +155,7 @@ public class MainController implements Initializable {
     }
 
     public void saveClick() {
-        FileChooser.save(mainPane, mainTextArea.getText());
+        FileChooser.save(mainPane, mainTextArea.getText(), currentStage.get());
     }
 
     public void colorSchemeClick() {
@@ -185,7 +186,7 @@ public class MainController implements Initializable {
     }
 
     public void onRedoClick() {
-        if (!redoHandler.isEmpty()) {
+        if (redoHandler.isEmpty()) {
             undoHandler.storeState(mainTextArea.getText());
             mainTextArea.clear();
             mainTextArea.appendText(redoHandler.getLastState());
@@ -233,4 +234,5 @@ public class MainController implements Initializable {
         Stage stage = (Stage) mainPane.getScene().getWindow();
         stage.close();
     }
+
 }
